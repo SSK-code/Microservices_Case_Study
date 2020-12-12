@@ -3,14 +3,18 @@ package com.casestudy.bookService.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
-@NamedEntityGraph(name = "graph.book.stock", attributeNodes = { @NamedAttributeNode(value = "stock") })
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.book.stock", attributeNodes = { @NamedAttributeNode(value = "stock") }),
+	                @NamedEntityGraph(name = "graph.bookName.stock", attributeNodes = { @NamedAttributeNode(value = "stock") })
+                   })
 public class Book {
 
 	@Id
@@ -23,7 +27,7 @@ public class Book {
 	@Column(name="author")
 	private String author;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
 	private Stock stock;
 	

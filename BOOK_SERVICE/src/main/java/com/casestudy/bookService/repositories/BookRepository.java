@@ -13,8 +13,8 @@ import com.casestudy.bookService.model.Book;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
 	
-	@Query(value = "select * from Book where book_name = :book_name", nativeQuery = true)
-	public List<Book> findBookByBookName(@Param(value = "book_name") String book_name);
+	@EntityGraph(value = "graph.bookName.stock")
+	public List<Book> findBookByBookName(String book_name);
 
 	@Query(value = "select * from Book where book_id = :book_id", nativeQuery = true)
 	public Book findBookByBookId(@Param(value = "book_id") Integer book_id);
