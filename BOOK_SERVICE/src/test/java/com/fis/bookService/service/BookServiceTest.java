@@ -1,6 +1,7 @@
 package com.fis.bookService.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.casestudy.bookService.exception.ApplicationException;
 import com.casestudy.bookService.model.Book;
 import com.casestudy.bookService.model.Stock;
 import com.casestudy.bookService.repositories.BookRepository;
@@ -79,8 +81,8 @@ public class BookServiceTest {
 	  @Test 
 	  public void getBookByBookIdShouldRetrnNull() {
 		  Mockito.when(bookRepository.findBookByBookId(Mockito.eq(3))).thenReturn(null); 
-		  Book returnedBook = bookService.findBookById(3);
-		  assertEquals(null, returnedBook); 
+		  Throwable exception = assertThrows(ApplicationException.class, () -> bookService.findBookById(3));
+		  assertEquals("Book with Id 3 is not found", exception.getMessage());
 	  }
 	  
 	  

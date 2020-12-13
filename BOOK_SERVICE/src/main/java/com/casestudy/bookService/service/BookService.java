@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.casestudy.bookService.exception.ApplicationException;
 import com.casestudy.bookService.model.Book;
 import com.casestudy.bookService.model.Stock;
 import com.casestudy.bookService.repositories.BookRepository;
@@ -23,6 +24,11 @@ public class BookService {
     public List<Book> findAllBooks() {
     	
     	List<Book> bookList = bookRepository.findAll();
+    	
+    	if(bookList == null || bookList.size() == 0) {
+			throw new ApplicationException();
+		}
+    	
     	return bookList;
     }
 
@@ -35,13 +41,25 @@ public class BookService {
 
 	public List<Book> findBookByName(String name) {
 		
-		return bookRepository.findBookByBookName(name);
+		List<Book> bookList = bookRepository.findBookByBookName(name);
+		
+		if(bookList == null || bookList.size() == 0) {
+			throw new ApplicationException("Book with name " + name + " is not found");
+		}
+		return bookList;
 	}
 
 	public Book findBookById(Integer id) {
-		return bookRepository.findBookByBookId(id);
+		
+		Book book = bookRepository.findBookByBookId(id);
+		
+		if(book == null) {
+			throw new ApplicationException("Book with Id " + id + " is not found");
+		}
+		return book;
 	}
 
+	@Transactional
 	public void updateBooks(Integer id, String type) {
 		Stock stock = null;
 		if(type != null && type != "") {
@@ -59,6 +77,7 @@ public class BookService {
 		}
 	}
 
+	@Transactional
 	public void deleteBooks(Integer bookId) {
 		
 		Book book = bookRepository.findBookByBookId(bookId);
@@ -69,6 +88,7 @@ public class BookService {
 		
 	}
 
+	@Transactional
 	public void addBooks(Integer bookId, Integer amount) {
 		
 		Book book = bookRepository.findBookByBookId(bookId);
